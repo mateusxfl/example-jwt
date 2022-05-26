@@ -1,7 +1,43 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using ApiAuth;
+using ApiAuth.Models;
+using ApiAuth.Repositories;
+using System.Security.Claims;
+using System.Text;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// --
+
+builder.Services.AddControllersWithViews();
+
+// Mostrar como o servidor vai fazer para descriptar e validar esse Token no AddJwtBearer.
+var key = Encoding.ASCII.GetBytes(Settings.Secret);
+
+// Esquema de autenticação do servitdor.
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
+
+// --
 
 var app = builder.Build();
 
@@ -18,6 +54,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// Primeiro o UseAuthentication depois o UseAuthorization.
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
