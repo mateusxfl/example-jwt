@@ -17,9 +17,7 @@ namespace ApiAuth.Repositories
             };
 
             // return users.Where(x: User => x.Username.ToLower() == username.ToLower() && x.Password == password);
-            // return users.FirstOrDefault(x: User => x.Username == username && x.Password == password);
-
-            return users.Find(x => x.Username.ToLower().Contains(username.ToLower()) && x.Password.Contains(password));
+            return users.FirstOrDefault(x => x.Username == username && x.Password == password);
         }
     }
 }
