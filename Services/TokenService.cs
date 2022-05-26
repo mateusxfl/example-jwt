@@ -20,10 +20,10 @@ namespace ApiAuth.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 // Claims: afirmações referentes aos roles do usuário.
-                Subject = new ClaimsIdentity(new[]
+                Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Username),
-                    new Claim(ClaimTypes.Role, user.Role)
+                    new Claim(ClaimTypes.Name, user.Username.ToString()),
+                    new Claim(ClaimTypes.Role, user.Role.ToString())
                 }),
 
                 // Caso o token expire, é necessário o processo de refresh Token.
