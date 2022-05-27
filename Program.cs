@@ -15,6 +15,9 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddControllersWithViews();
 
+// https://stackoverflow.com/questions/54048880/get-errormessage-from-response-in-netcore-2-2-web-api
+builder.Services.AddControllers(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
+
 // Mostrar como o servidor vai fazer para descriptar e validar esse Token no AddJwtBearer.
 var key = Encoding.ASCII.GetBytes(Settings.Secret);
 
