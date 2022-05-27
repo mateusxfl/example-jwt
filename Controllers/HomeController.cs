@@ -1,31 +1,29 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ApiAuth.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ApiAuth.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    [HttpGet]
+    [Route("anonymous")]
+    [AllowAnonymous]
+    public string Anonymous() => "Anonymous - Any user can have access.";
 
-    public HomeController(ILogger<HomeController> logger)
-    {
-        _logger = logger;
-    }
+    [HttpGet]
+    [Route("authenticated")]
+    [Authorize]
+    public string Authenticated() => $"Authenticated - {User.Identity.Name}";
 
-    public IActionResult Index()
-    {
-        return View();
-    }
+    [HttpGet]
+    [Route("employee")]
+    [Authorize(Roles = "Employee,Manager")]
+    public string Employee() => $"Employee - {User.Identity.Name}";
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
+    [HttpGet]
+    [Route("manager")]
+    [Authorize(Roles = "Manager")]
+    public string Manager() => $"Manager - {User.Identity.Name}";
 }
